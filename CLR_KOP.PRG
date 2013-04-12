@@ -16,6 +16,10 @@ IF m.ord_cnt = 0		&& Деньги не приходовались
   RETURN
 ENDIF
 
+<<<<<<< HEAD
+=======
+* PREVED!!!
+>>>>>>> 5c97a393291d53dec69cf3e3136fd83904cae149
 m.s_sav = SELECT()
 SELECT 0
 USE (m.base_path+"INCMONEY") SHARED AGAIN ORDER TAG DOC_NUM ALIAS CP_Money
