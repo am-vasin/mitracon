@@ -1,0 +1,14 @@
+*
+!*.prg
+!*.sc[xt]
+!*.mp[tx]
+!f.bat
+!isdisk.bin
+!fdd_stat.exe
+!foxprox.exe
+!foxhelp.*
+!sale.pj*
+!note.txt
+!p_ctrl.txt
+!.gitignore
+tmp*

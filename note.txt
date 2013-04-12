@@ -1,0 +1,2 @@
+1. ACT_S: Поле FIRST_SALE L1 после FLG_BUY, Индекс SALE: STR(CODE,7)+IIF(FIRST_SALE," ","*")+DTOS(DOC_DATE) Кодовая страница!
+

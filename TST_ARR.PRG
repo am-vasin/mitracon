@@ -1,0 +1,11 @@
+PROCEDURE TST_ARR
+PARAMETERS aaa
+
+DIMENSION aaa(10)
+for i = 1 to 10
+  aaa(i) = i
+ENDFOR
+DISPL MEMO LIKE aaa
+
+RETURN 1
+

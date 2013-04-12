@@ -1,0 +1,71 @@
+*
+*    Возвращаем все!
+*
+PROCEDURE Rev_All
+PRIVATE n_d, frm
+
+frm = "MTK"
+
+n_d = Doc_Num("ACT_NUM", frm, arm, DATE())
+n_d = STR(n_d, 8)
+
+USE (base_path+"STOCK") ORDER TAG CODE
+
+SELECT 0
+USE (base_path+"ACT_S")
+COPY STRUCTURE TO TMP_ACT
+SET RELATION TO CODE INTO STOCK
+
+SELECT 0
+USE TMP_ACT EXCLUSIVE
+INDEX ON CODE TAG CODE
+
+NN = 1
+SELECT ACT_S
+SCAN FOR QNT_REST # 0
+  NN = NN+1
+  IF NN % 100 = 0
+    WAIT WIND STR(RECNO())+STR(RECCOUNT()) NOWAIT
+  ENDIF
+  SELECT TMP_ACT
+  IF .NOT. SEEK(ACT_S.CODE)
+    APPEND BLANK
+    REPLACE FIRM     WITH frm,          ;
+            DOC_NUM  WITH n_d,          ;
+            DOC_DATE WITH DATE(),       ;
+            CODE     WITH ACT_S.CODE,   ;
+            FLG_BUY  WITH "R",          ;
+            PREFIX   WITH STOCK.PREFIX, ;
+            NAME     WITH STOCK.NAME,   ;
+            PRODUCER WITH STOCK.PRODUCER
+  ENDIF
+  REPLACE QNT_INC WITH QNT_INC-ACT_S.QNT_REST
+  IF .NOT. EMPTY(ACT_S.GTD_NUM)
+    REPLACE GTD_NUM  WITH ACT_S.GTD_NUM, ;
+            COUNTRY  WITH ACT_S.COUNTRY, ;
+            GTD_LINE WITH ACT_S.GTD_LINE,;
+            B_GTD    WITH ACT_S.B_GTD
+  ENDIF
+  SELECT ACT_S
+  REPLACE QNT_REP  WITH 0,  ;
+          QNT_REST WITH 0,  ;
+          REST_REP WITH 0
+ENDSCAN
+USE IN TMP_ACT
+APPEND FROM TMP_ACT
+
+SET RELATION TO
+SELECT STOCK
+REPLACE ALL QNT WITH 0, QNT_REP WITH 0, QNT_SAVE WITH 0, QNT_REAL WITH 0
+CLOSE DATA
+USE (base_path+"ACT_S_T")
+APPEND BLANK
+REPLACE FIRM      WITH frm,      ;
+        DOC_NUM   WITH n_d,      ;
+        DOC_DATE  WITH DATE(),   ;
+        DOC_TIME  WITH SECONDS(),;
+        SUP_CODE  WITH 10,       ;
+        FLG_BUY   WITH "R",      ;
+        WHO_ACT   WITH user,     ;
+        WHERE_ACT WITH arm
+CLOSE DATA

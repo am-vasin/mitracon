@@ -1,0 +1,27 @@
+USE ORD_T ORDER TAG DOC_NUM
+SELE 0
+USE LIST_TIT
+SCAN
+  IF EMPTY(SAL_NUM)
+    M_ST = " "
+    M_SL = " "
+    IF SEEK(STR(LST_NUM,6),"ORD_T")
+      SELECT ORD_T
+      SCAN REST WHILE LIST_NUM = STR(LIST_TIT.LST_NUM,6)
+        IF EMPTY(STO_MARK)
+          M_ST = "*"
+        ENDIF
+        IF EMPTY(WHO)
+          M_SL = "*"
+        ENDIF
+      ENDSCAN
+      SELECT LIST_TIT
+    ENDIF
+  ELSE
+    M_ST = " "
+    M_SL = " "
+  ENDIF
+  REPLACE NOTE_STO WITH M_ST, NOTE_SAL WITH M_SL
+ENDSCAN
+
+RETURN
