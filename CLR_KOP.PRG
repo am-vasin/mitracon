@@ -16,6 +16,7 @@ IF m.ord_cnt = 0		&& Деньги не приходовались
   RETURN
 ENDIF
 
+* ╧╨┼┬┼─!!!
 m.s_sav = SELECT()
 SELECT 0
 USE (m.base_path+"INCMONEY") SHARED AGAIN ORDER TAG DOC_NUM ALIAS CP_Money
